@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Contáctanos - Ojari Sabana</title>
+    <link rel="stylesheet" href="Combined.css" />
+    <link rel="stylesheet" href="custom-styles.css" />
+  </head>
+  <body class="pagina-productos">
+    <header>
+      <div class="logo-empresa">
+        <img
+          src="Ojari-logo-removebg-preview.png"
+          class="logo"
+          alt="logo-ojari"
+          loading="lazy"
+        />
+      </div>
+
+      <nav>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="about_us.html">Sobre Nosotros</a></li>
+          <li><a href="Precio-Productos.html">Cómpranos</a></li>
+          <li>
+            <a href="contactanos.html" aria-current="page">Contáctanos</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <div class="content-card form-container">
+        <h2>Formulario de Contacto</h2>
+        <p>¿Tienes alguna pregunta o sugerencia? ¡Nos encantaría escucharte!</p>
+        <form id="contactForm" novalidate>
+          <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              placeholder="Tu nombre completo"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="telefono">Teléfono:</label>
+            <input
+              type="tel"
+              id="telefono"
+              name="telefono"
+              placeholder="Ej: 300 123 4567"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="mensaje">Mensaje:</label>
+            <textarea
+              id="mensaje"
+              name="mensaje"
+              placeholder="Escribe tu mensaje aquí..."
+              rows="4"
+              required
+            ></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn">Enviar Mensaje</button>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

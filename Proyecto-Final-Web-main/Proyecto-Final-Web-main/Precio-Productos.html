@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nuestros productos</title>
+    <link rel="stylesheet" href="modal-pedido.css" />
+    <link rel="stylesheet" href="combined.css" />
+  </head>
+  <body class="pagina-productos">
+    <header>
+      <div class="logo-empresa">
+        <img
+          src="Ojari-logo-removebg-preview.png"
+          class="logo"
+          alt="logo-ojari"
+          loading="lazy"
+        />
+      </div>
+
+      <nav>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="about_us.html">Sobre Nosotros</a></li>
+          <li>
+            <a href="Precio-Productos.html" aria-current="page">Cómpranos</a>
+          </li>
+          <li><a href="contactanos.html">Contáctanos</a></li>
+        </ul>
+      </nav>
+
+      <div class="container-icon">
+        <div class="container-cart-icon">
+          <img src="cart-icon.png" alt="Icono de carrito" class="icon-cart" />
+          <div class="count-products">
+            <span id="contador-productos">0</span>
+          </div>
+        </div>
+        <div class="container-cart-products hidden-cart">
+          <form id="ordenar-form" action="" method="GET">
+            <div class="row-product"></div>
+            <div class="cart-total">
+              <h3>Total:</h3>
+              <span class="total-pagar">$0</span>
+            </div>
+            <p class="cart-empty">El carrito está vacío</p>
+            <button type="submit" id="ordenar-btn" class="ordenar-btn">
+              Ordenar
+            </button>
+          </form>
+        </div>
+      </div>
+    </header>
+    <section class="products">
+      <h2>Nuestros helados</h2>
+      <p class="subtitle">Helados que derriten corazones, no solo paladares.</p>
+   <div class="grid" id="helados-container">
+        <!-- Los helados se cargarán aquí dinámicamente -->
+      
+      </div>
+    </section>
+
+    <section class="products">
+      <h2>Nuestros Postres</h2>
+      <p class="subtitle">Postres que conquistan desde la primera probada.</p>
+ <div class="grid" id="postres-container">
+        <!-- Los postres se cargarán aquí dinámicamente -->
+      
+      </div>
+    </section>
+
+<!-- MODAL PARA DATOS DEL CLIENTE -->
+    <div id="modal-pedido" class="modal-overlay">
+      <div class="modal-content">
+        <h2>Confirmar Pedido</h2>
+        <p class="modal-subtitle">Por favor, completa tus datos para finalizar el pedido</p>
+        
+        <form id="form-datos-cliente">
+          <!-- Campo Nombre -->
+          <div class="form-group">
+            <label for="input-nombre">
+              <i class="icon-user">👤</i>
+              Nombre Completo
+            </label>
+            <input 
+              type="text" 
+              id="input-nombre" 
+              name="nombre" 
+              placeholder="Ej: Juan Pérez"
+              required
+              minlength="3"
+            />
+          </div>
+
+          <!-- Campo Teléfono -->
+          <div class="form-group">
+            <label for="input-telefono">
+              <i class="icon-phone">📱</i>
+              Teléfono
+            </label>
+            <input 
+              type="tel" 
+              id="input-telefono" 
+              name="telefono" 
+              placeholder="Ej: 300 123 4567"
+              required
+              pattern="[0-9]{10}"
+              title="Ingresa 10 dígitos"
+            />
+          </div>
+
+          <!-- Campo Dirección -->
+          <div class="form-group">
+            <label for="input-direccion">
+              <i class="icon-location">📍</i>
+              Dirección de Entrega
+            </label>
+            <textarea 
+              id="input-direccion" 
+              name="direccion" 
+              placeholder="Ej: Calle 123 #45-67, Apto 201"
+              required
+              rows="3"
+              minlength="10"
+            ></textarea>
+          </div>
+
+          <!-- Resumen del pedido -->
+          <div class="pedido-resumen">
+            <h3>Resumen del Pedido</h3>
+            <div id="resumen-productos"></div>
+            <div class="total-resumen">
+              <strong>Total a pagar:</strong>
+              <span id="total-modal">$0</span>
+            </div>
+          </div>
+
+          <!-- Botones -->
+          <div class="modal-buttons">
+            <button type="button" id="btn-cancelar" class="btn-cancelar">
+              Cancelar
+            </button>
+            <button type="submit" class="btn-confirmar">
+              Confirmar Pedido
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="Precio-Productos.js"></script>
+  </body>
+</html>
