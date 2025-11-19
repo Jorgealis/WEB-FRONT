@@ -1,7 +1,7 @@
 // ============================================
 // CONFIGURACIÓN
 // ============================================
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'https://ojari-heladeria-production.up.railway.app/api';
 
 // ============================================
 // ELEMENTOS DEL DOM
@@ -83,7 +83,19 @@ loginForm.addEventListener('submit', async (e) => {
             setTimeout(() => {
                 // Decodificar el token para obtener el rol
                 const tokenData = parseJwt(data.accessToken);
-                const rol = tokenData.rol || 'CLIENTE';
+                console.log('Token decodificado:', tokenData);
+                
+                // El rol viene en authorities como "ROLE_ADMIN", "ROLE_EMPLEADO", etc.
+                const authorities = tokenData.authorities || [];
+                let rol = 'CLIENTE'; // Por defecto
+                
+                if (authorities.length > 0) {
+                    // Extraer el rol del formato "ROLE_ADMIN" -> "ADMIN"
+                    const authority = authorities[0].authority || authorities[0];
+                    rol = authority.replace('ROLE_', '');
+                }
+                
+                console.log('Rol detectado:', rol);
                 
                 if (rol === 'ADMIN') {
                     window.location.href = 'admin-dashboard.html';
@@ -102,7 +114,7 @@ loginForm.addEventListener('submit', async (e) => {
         
     } catch (error) {
         console.error('Error de conexión:', error);
-        showMessage('Error de conexión. Verifica que el servidor esté corriendo.', 'error');
+        showMessage('Error de conexión con el servidor. Verifica que el backend esté corriendo.', 'error');
     }
 });
 
@@ -148,12 +160,12 @@ registerForm.addEventListener('submit', async (e) => {
         } else {
             const error = await response.text();
             console.error('Error en registro:', error);
-            showMessage('Error en el registro. Verifica los datos.', 'error');
+            showMessage('Error en el registro. Verifica que el email no esté registrado.', 'error');
         }
         
     } catch (error) {
         console.error('Error de conexión:', error);
-        showMessage('Error de conexión. Verifica que el servidor esté corriendo.', 'error');
+        showMessage('Error de conexión con el servidor. Verifica que el backend esté corriendo.', 'error');
     }
 });
 

@@ -203,7 +203,7 @@ async function cambiarEstadoPedido(pedidoId, nuevoEstado) {
 
 async function verDetallePedido(pedidoId) {
     try {
-        const response = await fetch(`http://localhost:8080/api/pedidos/${pedidoId}`, {
+        const response = await fetch(`https://ojari-heladeria-production.up.railway.app/api/pedidos/${pedidoId}`, {
             headers: ApiService.getHeaders()
         });
         

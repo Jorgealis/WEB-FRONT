@@ -2,7 +2,7 @@
 // SERVICIO DE API CENTRALIZADO
 // ============================================
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'https://ojari-heladeria-production.up.railway.app/api';
 
 class ApiService {
     // Obtener el token del localStorage
@@ -60,6 +60,20 @@ class ApiService {
             // El rol viene como "ROLE_CLIENTE" en el token, extraemos solo "CLIENTE"
             const rol = tokenData.authorities?.[0]?.authority || tokenData.rol;
             return rol ? rol.replace('ROLE_', '') : null;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    // Obtener ID del usuario desde el token
+    static getUserId() {
+        const token = this.getToken();
+        if (!token) return null;
+        
+        try {
+            const tokenData = this.parseJwt(token);
+            // Buscar el ID en diferentes posibles ubicaciones del token
+            return tokenData.userId || tokenData.id || tokenData.clienteId || null;
         } catch (e) {
             return null;
         }
@@ -123,6 +137,53 @@ class ApiService {
                 throw new Error('Debes iniciar sesión para crear un pedido');
             }
             
+            // Si el pedido tiene clienteEmail en lugar de clienteId, intentar buscar el cliente primero
+            if (pedidoData.clienteEmail && !pedidoData.clienteId) {
+                console.log('🔍 Buscando cliente por email:', pedidoData.clienteEmail);
+                
+                try {
+                    const responseCliente = await fetch(`${API_BASE_URL}/clientes/email/${pedidoData.clienteEmail}`, {
+                        headers: this.getHeaders()
+                    });
+                    
+                    if (responseCliente.ok) {
+                        const cliente = await responseCliente.json();
+                        pedidoData.clienteId = cliente.id;
+                        delete pedidoData.clienteEmail;
+                        console.log('✅ Cliente encontrado, ID:', cliente.id);
+                    } else {
+                        console.warn('⚠️ No se pudo obtener cliente por email');
+                    }
+                } catch (e) {
+                    console.warn('⚠️ Error buscando cliente por email:', e.message);
+                }
+            }
+            
+            // Si aún no tenemos clienteId, intentar obtenerlo del token
+            if (!pedidoData.clienteId) {
+                const userId = this.getUserId();
+                if (userId && !isNaN(userId)) {
+                    pedidoData.clienteId = parseInt(userId);
+                    console.log('✅ Usando ID del token:', pedidoData.clienteId);
+                } else {
+                    // Último recurso: obtener del token directamente
+                    const token = this.getToken();
+                    const tokenData = this.parseJwt(token);
+                    
+                    // Buscar cualquier campo numérico que pueda ser el ID
+                    const posibleId = tokenData.userId || tokenData.id || tokenData.clienteId;
+                    
+                    if (posibleId && !isNaN(posibleId)) {
+                        pedidoData.clienteId = parseInt(posibleId);
+                        console.log('✅ ID encontrado en token:', pedidoData.clienteId);
+                    } else {
+                        throw new Error('No se pudo determinar el ID del cliente. El backend debe incluir el ID en el token JWT o proporcionar un endpoint /api/clientes/email/{email}');
+                    }
+                }
+            }
+            
+            console.log('📦 Enviando pedido:', pedidoData);
+            
             const response = await fetch(`${API_BASE_URL}/pedidos`, {
                 method: 'POST',
                 headers: this.getHeaders(),
@@ -148,9 +209,11 @@ class ApiService {
             }
             
             // Obtener el ID del cliente del token
-            const token = this.getToken();
-            const tokenData = this.parseJwt(token);
-            const clienteId = tokenData.clienteId || tokenData.sub;
+            const clienteId = this.getUserId();
+            
+            if (!clienteId) {
+                throw new Error('No se pudo obtener el ID del cliente del token');
+            }
             
             const response = await fetch(`${API_BASE_URL}/pedidos/cliente/${clienteId}`, {
                 headers: this.getHeaders()
@@ -176,9 +239,11 @@ class ApiService {
                 throw new Error('Debes iniciar sesión');
             }
             
-            const token = this.getToken();
-            const tokenData = this.parseJwt(token);
-            const clienteId = tokenData.clienteId || tokenData.sub;
+            const clienteId = this.getUserId();
+            
+            if (!clienteId) {
+                throw new Error('No se pudo obtener el ID del cliente del token');
+            }
             
             const response = await fetch(`${API_BASE_URL}/clientes/${clienteId}`, {
                 headers: this.getHeaders()

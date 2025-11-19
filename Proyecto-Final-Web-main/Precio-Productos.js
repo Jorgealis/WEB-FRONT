@@ -32,14 +32,60 @@ async function verificarAutenticacion() {
     }
     
     try {
-        const perfil = await ApiService.obtenerMiPerfil();
-        clienteId = perfil.id;
-        console.log('Cliente autenticado:', perfil);
-        return true;
+        // Primero intentar obtener el ID directamente del token
+        clienteId = ApiService.getUserId();
+        
+        if (clienteId) {
+            console.log('✅ Cliente ID obtenido del token:', clienteId);
+            return true;
+        }
+        
+        // Si no está en el token, usar el email del usuario directamente
+        console.log('⚠️ ID no encontrado en token, usando email del usuario...');
+        
+        const token = ApiService.getToken();
+        const tokenData = ApiService.parseJwt(token);
+        console.log('Contenido del token:', tokenData);
+        
+        // Usar el email (sub) como identificador
+        const userEmail = tokenData.sub;
+        
+        if (!userEmail) {
+            throw new Error('No se pudo obtener el email del usuario del token');
+        }
+        
+        console.log('📧 Email del usuario:', userEmail);
+        
+        // Intentar obtener el perfil usando el email
+        // En lugar de /api/clientes/{id}, buscaremos por email
+        try {
+            const response = await fetch(`https://ojari-heladeria-production.up.railway.app/api/clientes/email/${userEmail}`, {
+                headers: ApiService.getHeaders()
+            });
+            
+            if (response.ok) {
+                const perfil = await response.json();
+                clienteId = perfil.id;
+                console.log('✅ Cliente encontrado por email:', perfil);
+                console.log('✅ Cliente ID:', clienteId);
+                return true;
+            } else {
+                console.warn('⚠️ No se pudo obtener perfil por email, usando email directamente');
+                // Si el endpoint no existe, usar el email como clienteId
+                clienteId = userEmail;
+                return true;
+            }
+        } catch (error) {
+            console.warn('⚠️ Error al buscar por email:', error.message);
+            // Usar el email como identificador
+            clienteId = userEmail;
+            return true;
+        }
+        
     } catch (error) {
-        console.error('Error obteniendo perfil:', error);
+        console.error('❌ Error crítico en autenticación:', error);
         alert('Error al verificar tu sesión. Por favor, inicia sesión nuevamente.');
-        window.location.href = 'login.html';
+        ApiService.logout();
         return false;
     }
 }
@@ -228,18 +274,32 @@ modalPedido.addEventListener('click', (e) => {
 formDatosCliente.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const formData = new FormData(formDatosCliente);
+    // Verificar que tenemos el clienteId
+    if (!clienteId) {
+        alert('Error: No se pudo identificar tu cuenta. Por favor, inicia sesión nuevamente.');
+        ApiService.logout();
+        return;
+    }
     
-    // Preparar objeto del pedido según el backend
+    // Preparar objeto del pedido
+    // Si clienteId es un email, el backend debe manejarlo
+    // Si es un número, funciona normalmente
     const pedido = {
-        clienteId: clienteId,
+        clienteId: typeof clienteId === 'number' ? clienteId : null,
+        clienteEmail: typeof clienteId === 'string' && clienteId.includes('@') ? clienteId : null,
         items: allProducts.map(p => ({
             productoId: p.id,
             cantidad: p.quantity
         }))
     };
     
-    console.log('Pedido a enviar:', JSON.stringify(pedido, null, 2));
+    // Si tenemos un ID numérico, usarlo
+    if (typeof clienteId === 'number' || !isNaN(clienteId)) {
+        pedido.clienteId = parseInt(clienteId);
+        delete pedido.clienteEmail;
+    }
+    
+    console.log('📦 Pedido a enviar:', JSON.stringify(pedido, null, 2));
     
     try {
         const btnConfirmar = formDatosCliente.querySelector('.btn-confirmar');
@@ -250,7 +310,7 @@ formDatosCliente.addEventListener('submit', async (e) => {
         // Enviar pedido al backend
         const response = await ApiService.crearPedido(pedido);
         
-        console.log('Respuesta del servidor:', response);
+        console.log('✅ Respuesta del servidor:', response);
         
         cerrarModal();
         alert(`¡Pedido #${response.id} realizado con éxito!\n\nTotal: $${response.total}\nEstado: ${response.estado}\n\nGracias por tu compra.`);
@@ -263,8 +323,23 @@ formDatosCliente.addEventListener('submit', async (e) => {
         btnConfirmar.disabled = false;
         
     } catch (error) {
-        console.error('Error enviando pedido:', error);
-        alert('Hubo un error al enviar el pedido. Por favor intenta nuevamente.\n\n' + error.message);
+        console.error('❌ Error enviando pedido:', error);
+        
+        // Mensaje de error más detallado
+        let errorMsg = 'Hubo un error al enviar el pedido.\n\n';
+        
+        if (error.message.includes('clienteId')) {
+            errorMsg += 'El sistema no pudo identificar tu cuenta correctamente.\n';
+            errorMsg += 'Esto puede deberse a que el backend espera un ID numérico.\n\n';
+            errorMsg += 'Solución temporal:\n';
+            errorMsg += '1. Cierra sesión\n';
+            errorMsg += '2. Vuelve a iniciar sesión\n';
+            errorMsg += '3. Contacta al administrador del sistema';
+        } else {
+            errorMsg += error.message;
+        }
+        
+        alert(errorMsg);
         
         const btnConfirmar = formDatosCliente.querySelector('.btn-confirmar');
         btnConfirmar.textContent = 'Confirmar Pedido';
