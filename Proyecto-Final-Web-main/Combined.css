@@ -1,0 +1,618 @@
+/* ==========================================================================
+   RESETEO BÁSICO Y ESTILOS GLOBALES
+   ========================================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", "Arial", sans-serif;
+  background-color: #fff;
+  color: #333;
+  overflow-x: clip; /* Previene el desbordamiento horizontal */
+}
+
+/* Fallback para navegadores que no soportan `clip` */
+@supports not (overflow-x: clip) {
+  body {
+    overflow-x: hidden;
+  }
+}
+
+/* ==========================================================================
+   ESTILOS DEL HEADER (COMPARTIDOS)
+   ========================================================================== */
+header {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding: 20px;
+  gap: 15px;
+}
+
+.logo-empresa {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  border: 3px solid #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.logo-empresa:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.logo {
+  display: block;
+  width: auto;
+  border-radius: 50%;
+}
+
+/* --- Navegación --- */
+nav ul {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  list-style: none;
+}
+
+nav a {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  color: #4b007d;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0.25rem 0;
+  transition: color 0.3s ease;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(to right, #4b007d, #9b67a2);
+  transition: width 0.3s ease;
+}
+
+nav a:hover,
+nav a[aria-current="page"] {
+  color: #9b67a2;
+}
+
+nav a:hover::after,
+nav a[aria-current="page"]::after {
+  width: 100%;
+}
+
+/* ==========================================================================
+   ESTILOS PÁGINA PRINCIPAL (INDEX)
+   ========================================================================== */
+.contenedorcito {
+  position: relative;
+  min-height: 100vh;
+  background-color: #ffc107;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 20px 0; /* Quitamos padding inferior para que el divisor se pegue */
+}
+
+/* --- Header específico para la página principal --- */
+.contenedorcito > header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.contenedorcito .logo-empresa {
+  width: 150px;
+  height: 150px;
+}
+
+.contenedorcito .logo {
+  height: 100px;
+}
+
+/* --- Sección de bienvenida --- */
+.bienvenida {
+  width: 100%;
+  display: flex;
+  justify-content: center; /* Centrado para mejor alineación */
+  align-items: flex-start;
+  margin-top: 300px;
+  gap: 60px; /* Espacio entre texto y carrusel */
+  padding: 0 20px;
+}
+
+.intro-contenedor {
+  max-width: 600px;
+  min-width: 280px;
+  animation: fadeInPop 1s cubic-bezier(0.42, 0, 0.58, 1);
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  padding: 30px 40px;
+  box-shadow: 0 2px 12px rgba(75, 0, 125, 0.09);
+}
+
+.intro-contenedor h1 {
+  margin-bottom: 0.5rem;
+  font-size: 2.1rem;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.intro-highlight {
+  color: #4b007d;
+  position: relative;
+  display: inline-block;
+  font-family: "Poppins", "Arial", sans-serif;
+  font-weight: 700;
+  background: linear-gradient(90deg, #4b007d 60%, #9b67a2 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  overflow: hidden;
+}
+
+.intro-highlight:after {
+  content: "";
+  display: block;
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(90deg, #4b007d, #9b67a2);
+  border-radius: 2px;
+  margin-top: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+.intro-highlight:hover:after {
+  transform: scaleX(1);
+}
+
+
+.intro-contenedor p {
+  margin-bottom: 1rem;
+  font-size: 1.12rem;
+  color: #222;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+/* --- Carrusel --- */
+.carrusel {
+  width: 480px; /* Aumentado de 360px */
+  height: 320px; /* Aumentado de 240px */
+  overflow: hidden;
+  border-radius: 18px;
+  box-shadow: 0 6px 32px rgba(75, 0, 125, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  position: relative;
+  flex-shrink: 0;
+  margin-left: 60px; /* Aumentado de 20px para moverlo más a la derecha */
+}
+
+/* Slider interno: contenedor de imágenes */
+.slider {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* apilar imágenes y controlar active */
+.slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.9, 0.3, 1);
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(75, 0, 125, 0.09);
+  transform: scale(1.03);
+}
+.slide.active {
+  opacity: 1;
+  z-index: 1;
+  transform: scale(1);
+}
+
+/* dots */
+.puntos {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-block;
+}
+.dot.active {
+  background-color: white;
+  transform: scale(1.25);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Pequeña sombra al hacer hover en el carrusel */
+.carrusel:hover {
+  transform: translateY(-2px);
+  transition: transform 0.2s ease;
+}
+
+/* Responsive: apilar en pantallas pequeñas */
+/* También ajusta el responsive para mantener la proporción */
+@media (max-width: 768px) {
+  .bienvenida {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .carrusel {
+    width: 92vw;
+    height: 320px; /* Aumentado para mantener proporción */
+    margin-top: 20px;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .carrusel {
+    height: 240px; /* Aumentado de 180px */
+  }
+}
+
+/* --- Divisor ondulado --- */
+.divisor-ondulado {
+  position: relative;
+  width: 100%;
+  height: 20vh;
+  min-height: 100px;
+  max-height: 200px;
+  z-index: 5;
+  margin-top: auto; /* Empuja el divisor hacia abajo */
+}
+
+.divisor-ondulado svg {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.onda {
+  animation: waveFloat 9s ease-in-out infinite;
+}
+.onda-2 {
+  animation-duration: 12s;
+  animation-delay: -1.2s;
+  opacity: 0.95;
+}
+
+@keyframes waveFloat {
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+/* --- Segunda parte --- */
+.segunda-parte {
+  background: linear-gradient(to bottom, #4b007d, #4b007d 120px, #ffffff 120px);
+  padding: 48px 20px 80px;
+}
+.segunda-parte__contenido {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   ESTILOS PÁGINA DE PRODUCTOS
+   ========================================================================== */
+.pagina-productos {
+  text-align: center;
+}
+
+.pagina-productos header {
+  position: static; /* Anula el posicionamiento absoluto */
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px 40px;
+  background-color: #ffc107;
+  border-bottom: 2px solid #e0a800;
+}
+
+.pagina-productos .logo-empresa {
+  width: 80px;
+  height: 80px;
+}
+
+.pagina-productos .logo {
+  height: 60px;
+}
+
+.pagina-productos nav {
+  margin: 0 auto; /* Centra la navegación */
+}
+
+/* --- Contenedor de productos --- */
+.products {
+  padding: 40px 20px;
+}
+
+.products .subtitle {
+  max-width: 600px;
+  margin: 10px auto 30px;
+  color: #666;
+}
+
+.grid {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  justify-items: center;
+}
+
+/* --- Tarjetas de producto --- */
+.card {
+  background: #fff;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  max-width: 280px;
+  width: 100%;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.card h3 {
+  color: orange;
+  font-size: 1.4em;
+  margin: 0;
+}
+
+.card h4 {
+  margin: 8px 0;
+  font-weight: bold;
+}
+
+.card p {
+  font-size: 0.9em;
+  color: #666;
+  margin: 0;
+}
+
+.card button {
+  margin-top: 15px;
+  background: orange;
+  border: none;
+  padding: 10px 20px;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.card button:hover {
+  background: darkorange;
+}
+
+/* ==========================================================================
+   CARRITO DE COMPRAS
+   ========================================================================== */
+.container-icon {
+  position: relative;
+}
+
+.icon-cart {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.count-products {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: orange;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+.container-cart-products {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  width: 350px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 20px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform-origin: top right;
+}
+
+.hidden-cart {
+  transform: scale(0.95);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cart-product {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.info-cart-product .titulo-producto-carrito {
+  font-weight: bold;
+}
+
+.info-cart-product .precio-producto-carrito {
+  font-weight: bold;
+}
+
+.cantidad-producto-carrito {
+  font-weight: bold;
+  color: orange;
+}
+
+.icon-close {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-top: 20px;
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
+}
+
+.cart-empty {
+  text-align: center;
+  font-weight: bold;
+  color: #666;
+  margin-top: 20px;
+}
+
+.ordenar-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.ordenar-btn:hover {
+  background-color: #45a049;
+}
+
+/* ==========================================================================
+   ANIMACIONES
+   ========================================================================== */
+@keyframes fadeInPop {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ==========================================================================
+   MEDIA QUERIES (RESPONSIVIDAD)
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* --- Header principal --- */
+  .contenedorcito > header {
+    padding: 15px;
+  }
+  .bienvenida {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-top: 280px; /* Ajustado */
+  }
+
+  nav ul {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .carrusel {
+    width: 92vw;
+    height: 320px;
+    margin-top: 20px;
+  }
+
+  /* --- Header de productos --- */
+  .pagina-productos header {
+    flex-direction: column;
+    padding: 10px 20px;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-empresa {
+    width: 120px; /* Tamaño unificado para móviles */
+    height: 120px;
+  }
+  .logo {
+    height: 80px; /* Tamaño unificado */
+  }
+  .intro-contenedor {
+    padding: 20px 15px;
+    text-align: center;
+  }
+  .intro-contenedor h1 {
+    font-size: 1.5rem;
+  }
+  .carrusel {
+    height: 240px;
+  }
+  .bienvenida {
+    margin-top: 250px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

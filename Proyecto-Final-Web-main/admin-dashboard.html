@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Ojari</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin-dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="Ojari-logo-removebg-preview.png" alt="Logo Ojari" class="sidebar-logo">
+                <h2>Panel Admin</h2>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-section="productos">
+                    📦 Productos
+                </button>
+                <button class="nav-btn" data-section="pedidos">
+                    🛒 Pedidos
+                </button>
+                <button class="nav-btn" data-section="categorias">
+                    🏷️ Categorías
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <span id="admin-name">👤 Admin</span>
+                </div>
+                <button class="btn-logout" onclick="ApiService.logout()">
+                    🚪 Cerrar Sesión
+                </button>
+                <a href="index.html" class="btn-home">
+                    🏠 Ir al Inicio
+                </a>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- SECCIÓN PRODUCTOS -->
+            <section id="productos-section" class="content-section active">
+                <header class="section-header">
+                    <h1>Gestión de Productos</h1>
+                    <button class="btn-primary" onclick="abrirModalProducto()">
+                        ➕ Nuevo Producto
+                    </button>
+                </header>
+
+                <div class="search-bar">
+                    <input 
+                        type="text" 
+                        id="search-productos" 
+                        placeholder="🔍 Buscar productos..."
+                        onkeyup="filtrarProductos()"
+                    >
+                    <select id="filter-categoria" onchange="filtrarProductos()">
+                        <option value="">Todas las categorías</option>
+                    </select>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Categoría</th>
+                                <th>Descripción</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productos-tbody">
+                            <tr>
+                                <td colspan="7" class="loading-cell">
+                                    Cargando productos...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECCIÓN PEDIDOS -->
+            <section id="pedidos-section" class="content-section">
+                <header class="section-header">
+                    <h1>Gestión de Pedidos</h1>
+                    <select id="filter-estado" onchange="cargarPedidos()">
+                        <option value="">Todos los estados</option>
+                        <option value="PENDIENTE">Pendientes</option>
+                        <option value="EN_PREPARACION">En Preparación</option>
+                        <option value="LISTO">Listos</option>
+                        <option value="ENTREGADO">Entregados</option>
+                        <option value="CANCELADO">Cancelados</option>
+                    </select>
+                </header>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID Pedido</th>
+                                <th>Cliente</th>
+                                <th>Fecha</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pedidos-tbody">
+                            <tr>
+                                <td colspan="6" class="loading-cell">
+                                    Cargando pedidos...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECCIÓN CATEGORÍAS -->
+            <section id="categorias-section" class="content-section">
+                <header class="section-header">
+                    <h1>Gestión de Categorías</h1>
+                    <button class="btn-primary" onclick="abrirModalCategoria()">
+                        ➕ Nueva Categoría
+                    </button>
+                </header>
+
+                <div class="categorias-grid" id="categorias-grid">
+                    <div class="loading-cell">Cargando categorías...</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL PRODUCTO -->
+    <div id="modal-producto" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-producto-titulo">Nuevo Producto</h2>
+                <button class="btn-close" onclick="cerrarModalProducto()">✖</button>
+            </div>
+
+            <form id="form-producto">
+                <input type="hidden" id="producto-id">
+
+                <div class="form-group">
+                    <label for="producto-nombre">Nombre del Producto *</label>
+                    <input 
+                        type="text" 
+                        id="producto-nombre" 
+                        required
+                        placeholder="Ej: Copa de Helado Junior"
+                    >
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="producto-precio">Precio *</label>
+                        <input 
+                            type="number" 
+                            id="producto-precio" 
+                            required
+                            min="0"
+                            step="100"
+                            placeholder="6500"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="producto-categoria">Categoría *</label>
+                        <select id="producto-categoria" required>
+                            <option value="">Seleccionar...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="producto-descripcion">Descripción</label>
+                    <textarea 
+                        id="producto-descripcion" 
+                        rows="3"
+                        placeholder="Describe el producto..."
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="producto-imagen">URL de la Imagen</label>
+                    <input 
+                        type="text" 
+                        id="producto-imagen"
+                        placeholder="nombre-imagen.jpg"
+                    >
+                    <small>Puedes usar el nombre del archivo si está en la carpeta del proyecto</small>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="button" class="btn-secondary" onclick="cerrarModalProducto()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        Guardar Producto
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL CATEGORÍA -->
+    <div id="modal-categoria" class="modal-overlay">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2>Nueva Categoría</h2>
+                <button class="btn-close" onclick="cerrarModalCategoria()">✖</button>
+            </div>
+
+            <form id="form-categoria">
+                <div class="form-group">
+                    <label for="categoria-nombre">Nombre de la Categoría *</label>
+                    <input 
+                        type="text" 
+                        id="categoria-nombre" 
+                        required
+                        placeholder="Ej: Helados"
+                    >
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="button" class="btn-secondary" onclick="cerrarModalCategoria()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        Guardar Categoría
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DETALLE PEDIDO -->
+    <div id="modal-pedido-detalle" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Detalle del Pedido #<span id="pedido-detalle-id"></span></h2>
+                <button class="btn-close" onclick="cerrarModalPedidoDetalle()">✖</button>
+            </div>
+
+            <div id="pedido-detalle-content">
+                <!-- Se llenará dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <script src="api-service.js"></script>
+    <script src="admin-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ojari Sabana</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="Menu-Principal.css" />
+    <link rel="stylesheet" href="estilos-nuevos.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .btn-login {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #4b007d 0%, #7b2cbf 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(75, 0, 125, 0.3);
+        transition: all 0.3s ease;
+        z-index: 1000;
+        text-decoration: none;
+        display: inline-block;
+      }
+      
+      .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(75, 0, 125, 0.4);
+      }
+      
+      .user-info {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background: white;
+        padding: 10px 20px;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+      }
+      
+      .user-info span {
+        font-weight: 600;
+        color: #4b007d;
+      }
+      
+      .btn-logout-header {
+        padding: 8px 16px;
+        background: #e74c3c;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.3s ease;
+      }
+      
+      .btn-logout-header:hover {
+        background: #c0392b;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Botón de Login/User Info -->
+    <div id="auth-section"></div>
+
+    <div class="contenedorcito">
+      <header>
+        <div class="logo-empresa">
+          <img
+            src="Ojari-logo-removebg-preview.png"
+            class="logo"
+            alt="logo-ojari"
+            loading="lazy"
+          />
+        </div>
+
+        <nav>
+          <ul>
+            <li><a href="#" aria-current="page">Inicio</a></li>
+            <li><a href="about_us.html">Sobre Nosotros</a></li>
+            <li><a href="Precio-Productos.html">Cómpranos</a></li>
+            <li><a href="contactanos.html">Contáctanos</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <div class="bienvenida">
+        <div class="intro-contenedor">
+          <h1>
+            <span class="intro-highlight">BIENVENIDOS A LA</span> MEJOR
+            HELADERIA
+          </h1>
+          <p>
+            En Ojari te ofrecemos los mejores helados artesanales, preparados
+            con ingredientes premium y recetas únicas que despiertan tus
+            sentidos. ¡Ven y disfruta!
+          </p>
+        </div>
+
+        <div class="carrusel" aria-roledescription="carousel">
+          <div class="slider" role="list">
+            <img
+              src="helado1.jpg"
+              alt="helado-1"
+              class="slide"
+              loading="lazy"
+            />
+            <img
+              src="helado2.jpg"
+              alt="helado-2"
+              class="slide"
+              loading="lazy"
+            />
+            <img
+              src="helado3.jpeg"
+              alt="helado-3"
+              class="slide"
+              loading="lazy"
+            />
+            <img
+              src="helado4.jpeg"
+              alt="helado-4"
+              class="slide"
+              loading="lazy"
+            />
+          </div>
+
+          <div class="puntos" role="tablist" aria-label="indicadores-de-imagen">
+            <button
+              class="dot active"
+              data-index="0"
+              aria-label="Imagen 1"
+              aria-pressed="true"
+            ></button>
+            <button
+              class="dot"
+              data-index="1"
+              aria-label="Imagen 2"
+              aria-pressed="false"
+            ></button>
+            <button
+              class="dot"
+              data-index="2"
+              aria-label="Imagen 3"
+              aria-pressed="false"
+            ></button>
+            <button
+              class="dot"
+              data-index="3"
+              aria-label="Imagen 4"
+              aria-pressed="false"
+            ></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="divisor-ondulado" aria-hidden="true">
+        <svg
+          viewBox="0 0 1440 200"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+        >
+          <path
+            class="onda onda-1"
+            d="M0,100 C300,180 600,40 900,120 C1200,200 1320,80 1440,100 L1440,200 L0,200 Z"
+            fill="#4B007D"
+          />
+          <path
+            class="onda onda-2"
+            d="M0,140 C320,200 580,80 960,160 C1280,220 1360,140 1440,160 L1440,200 L0,200 Z"
+            fill="#9B67A2"
+          />
+        </svg>
+      </div>
+    </div>
+
+    <main class="seccion-blanca">
+      <section class="about-section container">
+        <div class="about-grid">
+          <div class="about-image">
+            <div class="image-wrapper">
+              <img
+                src="Ratoncitos.jpg"
+                alt="dibujo-decorativo-de-abejita"
+                loading="lazy"
+              />
+            </div>
+          </div>
+          <div class="about-content">
+            <div class="flecha" aria-hidden="true">
+              <svg width="100" height="24" viewBox="0 0 100 24">
+                <path
+                  d="M0 12h94l-8-8 2-2 12 12-12 12-2-2 8-8H0z"
+                  fill="#4B007D"
+                />
+              </svg>
+            </div>
+            <h2 class="title-animated">Sobre Nosotros</h2>
+            <p class="main-text">
+              En Ojari creamos helados artesanales con recetas tradicionales y
+              un toque moderno. Seleccionamos ingredientes frescos, trabajamos
+              en pequeños lotes y cuidamos cada detalle para que cada cucharada
+              sea una experiencia.
+            </p>
+            <p class="muted">
+              Familia, sabor y calidad: eso nos guía. Si quieres conocer más de
+              nuestras historias, procesos y variedades, te invitamos a
+              descubrirlo.
+            </p>
+            <div class="cta-wrapper">
+              <a href="about_us.html" class="btn-conocer">
+                Conocer más
+                <span class="btn-arrow">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <section class="seccion-frutal">
+      <div class="seccion-fondo">
+        <div class="seccion-contenido">
+          <h2>Nuestros Productos</h2>
+          <div class="productos-grid">
+            <div class="producto-card">
+              <div class="producto-imagen">
+                <img
+                  src="PRODUCTO-VENTA1.png"
+                  alt="Helado de Chocolate"
+                  loading="lazy"
+                />
+              </div>
+              <div class="producto-info">
+                <span class="producto-precio">$6.500</span>
+                <h3 class="producto-nombre">Copa de Helado Junior</h3>
+                <p class="producto-descripcion">
+                  Dos sabores de helado, chantilly, galleta y topping de
+                  preferencia.
+                </p>
+                <a href="Precio-Productos.html" class="btn-comprar"
+                  >Ir a comprar</a
+                >
+              </div>
+            </div>
+
+            <div class="producto-card">
+              <div class="producto-imagen">
+                <img
+                  src="PRODUCTO-VENTA2.png"
+                  alt="Helado de Fresa"
+                  loading="lazy"
+                />
+              </div>
+              <div class="producto-info">
+                <span class="producto-precio">$8.500</span>
+                <h3 class="producto-nombre">Canasta de Helado Especial</h3>
+                <p class="producto-descripcion">
+                  Tres sabores de helado, fruta, chantilly, galleta y topping de
+                  preferencia.
+                </p>
+                <a href="Precio-Productos.html" class="btn-comprar"
+                  >Ir a comprar</a
+                >
+              </div>
+            </div>
+
+            <div class="producto-card">
+              <div class="producto-imagen">
+                <img
+                  src="PRODUCTO-VENTA3.png"
+                  alt="Helado de Vainilla"
+                  loading="lazy"
+                />
+              </div>
+              <div class="producto-info">
+                <span class="producto-precio">$6.000</span>
+                <h3 class="producto-nombre">Merengon</h3>
+                <p class="producto-descripcion">
+                  Merengue, fresa, guanábana, mango, crema chantilly, salsa.
+                </p>
+                <a href="Precio-Productos.html" class="btn-comprar"
+                  >Ir a comprar</a
+                >
+              </div>
+            </div>
+
+            <div class="producto-card">
+              <div class="producto-imagen">
+                <img
+                  src="PRODUCTO-VENTA4.png"
+                  alt="Helado de Mango"
+                  loading="lazy"
+                />
+              </div>
+              <div class="producto-info">
+                <span class="producto-precio">$12.000</span>
+                <h3 class="producto-nombre">Waffle de Nutella</h3>
+                <p class="producto-descripcion">
+                  Waffle fresco, banano, Nutella y salsa de chocolate.
+                </p>
+                <a href="Precio-Productos.html" class="btn-comprar"
+                  >Ir a comprar</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion-siguenos">
+      <div class="contenedor-siguenos">
+        <h2>Síguenos</h2>
+        <div class="redes-sociales">
+          <a
+            href="https://www.facebook.com/share/16ijiYumfW/"
+            target="_blank"
+            aria-label="Facebook"
+          >
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a
+            href="https://www.instagram.com/ojariartesanal?igsh=eGNoZmZqZ2VrZmZw"
+            target="_blank"
+            aria-label="Instagram"
+          >
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a
+            href="https://youtu.be/hllu_rb1ow0?si=dMfZpmNm_DOh5exF"
+            target="_blank"
+            aria-label="Twitter"
+          >
+            <i class="fab fa-twitter"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="pie-pagina">
+      <p>Ojari Artesanal © 2025. Desarrollado por Andrés, Daniel y Jorge.</p>
+    </footer>
+
+    <script src="api-service.js"></script>
+    <script src="Menu-Principal.js" defer></script>
+    <script>
+      // Verificar si hay sesión activa y mostrar info
+      document.addEventListener('DOMContentLoaded', () => {
+        const authSection = document.getElementById('auth-section');
+        
+        if (ApiService.isAuthenticated()) {
+          const usuario = localStorage.getItem('usuario') || 'Usuario';
+          const rol = ApiService.getUserRole();
+          
+          authSection.innerHTML = `
+            <div class="user-info">
+              <span>👤 ${usuario} (${rol})</span>
+              <button class="btn-logout-header" onclick="ApiService.logout()">
+                Cerrar Sesión
+              </button>
+            </div>
+          `;
+        } else {
+          authSection.innerHTML = `
+            <a href="login.html" class="btn-login">
+              🔐 Iniciar Sesión
+            </a>
+          `;
+        }
+      });
+    </script>
+  </body>
+</html>
